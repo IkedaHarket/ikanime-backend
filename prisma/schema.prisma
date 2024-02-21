@@ -1,0 +1,116 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL")
+}
+
+enum LogSeverityLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Log {
+  id String @id @default( uuid() )
+  origin String
+  message String
+  severity LogSeverityLevel
+  createdAt DateTime @default(now()) 
+}
+
+model AnimeType {
+  id String @id @default(uuid())
+  name String @unique
+  animes Anime[]
+  isActive Boolean @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) 
+}
+
+model AnimeState {
+  id String @id @default(uuid())
+  name String @unique
+  animes Anime[]
+  isActive Boolean @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) 
+}
+
+model Anime {
+  id String @id @default(uuid())
+  animeCategories AnimeCategoryHub[]
+  anotherNames AnotherAnimeName[]
+  description String 
+  episodes AnimeEpisode[]
+  name String
+  nextEpisode DateTime?
+  releaseDate DateTime?
+  state AnimeState @relation(fields: [stateId], references: [id])
+  stateId String
+  type AnimeType @relation(fields: [typeId], references: [id])
+  typeId String
+  image String
+  position Int
+  uniqueName String @unique
+  isActive Boolean @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default( now() ) 
+}
+
+model AnotherAnimeName {
+  id String @id @default( uuid() )
+  animeId String
+  anime Anime @relation(fields: [animeId], references: [id])
+  name String
+  isActive Boolean @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default( now() ) 
+}
+
+model AnimeCategory {
+  id String @id @default(uuid())
+  name String @unique
+  animeCategories AnimeCategoryHub[]
+  isActive Boolean @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) 
+}
+
+model AnimeCategoryHub {
+  id String @id @default(uuid())
+  animeId String 
+  anime Anime @relation(fields: [animeId], references: [id])
+  animeCategoryId String
+  animeCategory AnimeCategory @relation(fields: [animeCategoryId], references: [id])
+  isActive Boolean @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) 
+}
+
+model AnimeEpisode {
+  id String @id @default(uuid())
+  animeId String
+  anime Anime @relation(fields: [animeId], references: [id])
+  number Int
+  videoOptions AnimeEpisodeVideoOption[]
+  isActive Boolean @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) 
+}
+
+model AnimeEpisodeVideoOption {
+  id String @id @default( uuid() )
+  animeEpisodeId String
+  animeEpisode AnimeEpisode @relation(fields: [animeEpisodeId], references: [id])
+  nameServer String
+  url String
+  isActive Boolean @default(true)
+  updatedAt DateTime @updatedAt
+  createdAt DateTime @default(now()) 
+}
