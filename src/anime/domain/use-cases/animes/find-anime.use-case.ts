@@ -1,8 +1,7 @@
 import { PaginationResponse } from "@core/interfaces/pagination-response";
-import { Criteria } from "@core/models/criteria";
+import { Criteria } from "@core/models";
 
-import { Anime } from '@anime/domain/entities/anime.entity';
-import { AnimeRepository } from "@anime";
+import { AnimeRepository, Anime } from "@anime";
 
 export interface FindAnimeUseCase{
     execute(filter?: Criteria<Object>): Promise<PaginationResponse<Anime[]>>

@@ -1,5 +1,5 @@
 import { PaginationResponse } from '@core/interfaces/pagination-response';
-import { Criteria } from '@core/models/criteria';
+import { Criteria } from '@core/models';
 import { Anime } from '@anime';
 
 export abstract class AnimeRepository{

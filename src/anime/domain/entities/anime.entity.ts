@@ -1,13 +1,18 @@
-
+interface State{ id: string, value:string }
+interface Type{ id: string, value:string }
+interface OtherNames{ id: string, value:string }
+interface Category{ id: string, value:string }
 interface AnimeProps{
     id:string
     name: string,
     description: string,
     uniqueName: string,
-    stateId: string,
-    typeId: string,
+    otherNames: OtherNames[],
+    state: State,
+    type: Type,
     image: string,
     position: number,
+    categories: Category[],
     nextEpisode : Date | null,
     releaseDate : Date | null,
     isActive ?: boolean,
@@ -17,47 +22,54 @@ interface AnimeProps{
 
 export class Anime{
     public readonly id: string
-    public name: string
-    public description : string
-    public uniqueName : string
-    public stateId : string
-    public typeId : string
-    public image : string
-    public position : number
-    public nextEpisode : Date | null
-    public releaseDate : Date | null
-    public isActive ?: boolean
-    public updatedAt : Date
+    public categories : Category[]
     public createdAt : Date
+    public description : string
+    public image : string
+    public isActive ?: boolean
+    public name: string
+    public nextEpisode : Date | null
+    public otherNames : OtherNames[]
+    public position : number
+    public releaseDate : Date | null
+    public state : State
+    public type : Type
+    public uniqueName : string
+    public updatedAt : Date
     
     constructor({
                 id,
-                name,
-                description,
-                uniqueName,
-                stateId,
-                image,
-                position,
-                typeId,
-                nextEpisode,
-                releaseDate,
+                categories,
                 createdAt,
-                updatedAt,
+                description,
+                image,
                 isActive,
+                name,
+                nextEpisode,
+                otherNames,
+                position,
+                releaseDate,
+                state,
+                type,
+                uniqueName,
+                updatedAt,
                 }: AnimeProps ){  
         this.id = id
-        this.name = name
-        this.description = description
-        this.uniqueName = uniqueName
-        this.stateId = stateId
-        this.typeId = typeId
-        this.image = image
-        this.position = position
-        this.nextEpisode = nextEpisode
-        this.releaseDate = releaseDate
-        this.isActive =  isActive        
-        this.updatedAt = updatedAt        
+        this.categories = categories
         this.createdAt = createdAt
+        this.description = description
+        this.image = image
+        this.isActive = isActive        
+        this.name = name
+        this.nextEpisode = nextEpisode
+        this.otherNames = otherNames
+        this.position = position
+        this.releaseDate = releaseDate
+        this.state = state
+        this.type = type
+        this.uniqueName = uniqueName
+        this.updatedAt = updatedAt        
     }
 
 }
+
