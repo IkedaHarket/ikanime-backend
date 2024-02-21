@@ -1,7 +1,6 @@
-import { PaginationResponse } from "@core/interfaces";
-import { VideoOption } from '@anime'
-import { Criteria } from "@core/models";
+import { FindOptions } from "../../../core/interfaces";
+import { VideoOption } from '../../'
 
 export abstract class VideoOptionRepository{
-    abstract find(filter?: Criteria<Object>): Promise<PaginationResponse<VideoOption[]>>
+    abstract find(findOptions: FindOptions): Promise<VideoOption[]>
 }

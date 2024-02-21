@@ -1,4 +1,4 @@
-import express from 'express'
+import express, { Request, Response } from 'express'
 import compression from 'compression';
 import path from 'path';
 
@@ -23,6 +23,7 @@ export class Server{
 
     public start(){
         this.setMiddlewares()
+        this.setRoutes()
         this.setPublicPath()
         this.setSinglePage()
         this.startListen()
@@ -34,6 +35,10 @@ export class Server{
         this.app.use( compression() )
     }
     
+    private setRoutes(): void {
+        this.app.use( this.routes )
+    }
+
     private setPublicPath(): void {
         this.app.use( express.static( this.publicPath ) )
     }
@@ -42,7 +47,7 @@ export class Server{
         this.app.get('*', (req, res) => {
             const indexPath = path.join( __dirname + `../../../${ this.publicPath }/index.html` );
             res.sendFile(indexPath);
-          });
+        });
     }
 
     private startListen(){

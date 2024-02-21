@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { AnimeRouter } from '../../../anime';
 
 export class AppRoutes {
 
@@ -6,7 +7,7 @@ export class AppRoutes {
 
     const router = Router();
 
-
+    router.use('/api/anime', AnimeRouter.routes)
 
     return router;
   }

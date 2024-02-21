@@ -1,9 +1,8 @@
-import { Envs } from "./core/adapters/envs/envs.adapter"
-import { AppRoutes } from "./core/server/express/routes"
-import { Server } from "./core/server/express/server"
+import { Envs } from "./core/adapters"
+import { AppRoutes, Server } from "./core/server/express"
 
 
-async function main(){
+function main(){
     const server = new Server({
         port: Envs.PORT,
         routes: AppRoutes.routes
@@ -13,4 +12,4 @@ async function main(){
 }
 
 
-( async ()=> await main() )()
+( async ()=> main() )()

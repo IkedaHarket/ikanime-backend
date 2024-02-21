@@ -1,10 +1,8 @@
-import { PaginationResponse } from "@core/interfaces/pagination-response";
-import { Criteria } from "@core/models";
-
-import { AnimeRepository, Anime } from "@anime";
+import { PaginationResponse, FindOptions } from "../../../../core/interfaces/";
+import { AnimeRepository, Anime } from "../../../";
 
 export interface FindAnimeUseCase{
-    execute(filter?: Criteria<Object>): Promise<PaginationResponse<Anime[]>>
+    execute(findOptions: FindOptions): Promise<PaginationResponse<Anime[]>>
 }
 
 export class FindAnime implements FindAnimeUseCase{
@@ -13,7 +11,18 @@ export class FindAnime implements FindAnimeUseCase{
             private readonly animeRepository: AnimeRepository
         ){}
 
-    execute(filter?: Criteria<Object>): Promise<PaginationResponse<Anime[]>> {
-        return this.animeRepository.find(filter)
+    async execute(findOptions: FindOptions): Promise<PaginationResponse<Anime[]>> {
+        const { records, totalRecords } = await this.animeRepository.find(findOptions)
+        const { limit, page } = findOptions.paginationDto
+        const totalPages = Math.ceil(totalRecords / limit);
+        return {
+            limit,
+            page,
+            next: (page < totalPages ) ? `/api/anime?page=${ ( page + 1 ) }&limit=${ limit }` : null ,
+            prev: (page - 1 > 0) ? `/api/anime?page=${ ( page - 1 ) }&limit=${ limit }` : null ,
+            records,
+            total: totalRecords
+        }
     }
+
 }

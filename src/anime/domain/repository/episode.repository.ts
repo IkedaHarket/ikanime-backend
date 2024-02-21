@@ -1,8 +1,7 @@
-import { PaginationResponse } from "@core/interfaces";
-import { Episode } from '@anime'
-import { Criteria } from "@core/models";
+import { FindOptions, FindResponse } from '../../../core/interfaces';
 
+import { Episode } from '../../'
 
 export abstract class EpisodeRepository{
-    abstract find(filter?: Criteria<Object>): Promise<PaginationResponse<Episode[]>>
+    abstract find(findOptions: FindOptions): Promise<FindResponse<Episode[]>>
 }

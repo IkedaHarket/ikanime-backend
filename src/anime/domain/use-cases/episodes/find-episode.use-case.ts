@@ -1,10 +1,8 @@
-import { PaginationResponse } from "@core/interfaces";
-import { Criteria } from "@core/models";
-
-import { EpisodeRepository, Episode } from "@anime";
+import { FindOptions, PaginationResponse } from "../../../../core/interfaces";
+import { EpisodeRepository, Episode } from "../../../";
 
 export interface FindEpisodeUseCase{
-    execute(filter?: Criteria<Object>): Promise<PaginationResponse<Episode[]>>
+    execute(findOptions: FindOptions): Promise<PaginationResponse<Episode[]>>
 }
 
 export class FindEpisode implements FindEpisodeUseCase{
@@ -13,7 +11,18 @@ export class FindEpisode implements FindEpisodeUseCase{
             private readonly episodeRepository: EpisodeRepository
         ){}
 
-    execute(filter?: Criteria<Object>): Promise<PaginationResponse<Episode[]>> {
-        return this.episodeRepository.find(filter)
+    async execute(findOptions: FindOptions): Promise<PaginationResponse<Episode[]>> {
+        
+        const { records, totalRecords } = await this.episodeRepository.find(findOptions)
+        const { limit, page } = findOptions.paginationDto
+        const totalPages = Math.ceil(totalRecords / limit);
+        return {
+            limit,
+            page,
+            next: (page < totalPages ) ? `/api/anime/episode?page=${ ( page + 1 ) }&limit=${ limit }` : null ,
+            prev: (page - 1 > 0) ? `/api/anime/episode?page=${ ( page - 1 ) }&limit=${ limit }` : null ,
+            records,
+            total: totalRecords
+        }
     }
 }
