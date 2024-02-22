@@ -1,20 +1,28 @@
-import { PaginationResponse } from "../../../../core/interfaces";
-import { Criteria } from "../../../../core/models";
+import { FindOptions, PaginationResponse } from "../../../../core/interfaces";
 
-import { VideoOption, VideoOptionRepository } from "../../../";
+import * as Domain from "../../";
 
 export interface FindVideoOptionUseCase {
-    execute(filter?: Criteria<Object>): Promise<PaginationResponse<VideoOption[]>>
+    execute(findOptions: FindOptions<Domain.VideoOptionFindFilterDto>): Promise<PaginationResponse<Domain.VideoOption[]>>
 }
 
 export class FindVideoOption implements FindVideoOptionUseCase{
     
     constructor(
-            private readonly videoOptionRepository: VideoOptionRepository
+            private readonly videoOptionRepository: Domain.VideoOptionRepository
         ){}
 
-    execute(filter?: Criteria<Object>): Promise<PaginationResponse<VideoOption[]>> {
-        // return this.videoOptionRepository.find(filter)
-        throw new Error()
+    async execute(findOptions: FindOptions<Domain.VideoOptionFindFilterDto>): Promise<PaginationResponse<Domain.VideoOption[]>> {
+        const { records, totalRecords } = await this.videoOptionRepository.find(findOptions)
+        const { limit, page } = findOptions.paginationDto
+        const totalPages = Math.ceil(totalRecords / limit);
+        return {
+            limit,
+            page,
+            next: (page < totalPages ) ? `/api/anime/episode?page=${ ( page + 1 ) }&limit=${ limit }` : null ,
+            prev: (page - 1 > 0) ? `/api/anime/episode?page=${ ( page - 1 ) }&limit=${ limit }` : null ,
+            records,
+            total: totalRecords
+        }
     }
 }

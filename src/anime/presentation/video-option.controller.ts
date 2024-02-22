@@ -5,21 +5,21 @@ import { PaginationDto } from "../../core/dtos";
 
 import * as Domain from "../domain";
 
-export class EpisodeController{
+export class VideoOptionController{
 
     constructor(
-            private readonly episodeRepository: Domain.EpisodeRepository,
+            private readonly videoOptionRepository: Domain.VideoOptionRepository,
         ){}
 
-    getEpisodes = (req: Request, res: Response) => {
+    getVideoOptions = (req: Request, res: Response) => {
         const { page = 1, limit = 12 } = req.query;
         const [ errorPagination, paginationDto ] = PaginationDto.create( +page, +limit );
-        const [ errorFilter, episodeFindFilterDto ] = Domain.EpisodeFindFilterDto.create(req.body)
+        const [ errorFilter, episodeFindFilterDto ] = Domain.VideoOptionFindFilterDto.create(req.body)
         
         if ( errorPagination ) return res.status(400).json({ error: errorPagination });
         if ( errorFilter ) return res.status(400).json({ error: errorFilter });
 
-        new Domain.FindEpisode(this.episodeRepository).execute({ 
+        new Domain.FindVideoOption(this.videoOptionRepository).execute({ 
           paginationDto: paginationDto!,
           filter: episodeFindFilterDto!,
         })

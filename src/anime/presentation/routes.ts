@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { AnimeController, EpisodeController, AnimePostgresRepository, EpisodePostgresRepository } from '../';
+import * as Controller from './';
+import * as Infrastructure from '../infrastructure';
 
 export class AnimeRouter {
 
@@ -8,16 +9,20 @@ export class AnimeRouter {
 
     const router = Router();
 
-    const animeRepository = new AnimePostgresRepository({})
-    const animeController = new AnimeController(animeRepository);
+    const animeRepository = new Infrastructure.AnimePostgresRepository({})
+    const animeController = new Controller.AnimeController(animeRepository);
 
-    const episodeRepository = new EpisodePostgresRepository({})
-    const episodeController = new EpisodeController(episodeRepository)
+    const episodeRepository = new Infrastructure.EpisodePostgresRepository({})
+    const episodeController = new Controller.EpisodeController(episodeRepository)
 
+    const videoOptionsRepository = new Infrastructure.VideoOptionPostgresRepository({})
+    const videoOptionsController = new Controller.VideoOptionController(videoOptionsRepository)
 
     router.get('/', animeController.getAnimes );
     
     router.get('/episode', episodeController.getEpisodes );
+    
+    router.get('/video-option', videoOptionsController.getVideoOptions );
 
     return router;
   }

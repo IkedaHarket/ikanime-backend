@@ -1,18 +1,18 @@
 import { PaginationResponse, FindOptions } from "../../../../core/interfaces/";
-import { AnimeRepository, Anime } from "../../../";
-import { AnimeFindFilterDto } from "../../dtos/anime/anime-find-filter.dto";
+
+import * as Domain from "../../";
 
 export interface FindAnimeUseCase{
-    execute(findOptions: FindOptions<AnimeFindFilterDto>): Promise<PaginationResponse<Anime[]>>
+    execute(findOptions: FindOptions<Domain.AnimeFindFilterDto>): Promise<PaginationResponse<Domain.Anime[]>>
 }
 
 export class FindAnime implements FindAnimeUseCase{
     
     constructor(
-            private readonly animeRepository: AnimeRepository
+            private readonly animeRepository: Domain.AnimeRepository
         ){}
 
-    async execute(findOptions: FindOptions<AnimeFindFilterDto>): Promise<PaginationResponse<Anime[]>> {
+    async execute(findOptions: FindOptions<Domain.AnimeFindFilterDto>): Promise<PaginationResponse<Domain.Anime[]>> {
         const { records, totalRecords } = await this.animeRepository.find(findOptions)
         const { limit, page } = findOptions.paginationDto
         const totalPages = Math.ceil(totalRecords / limit);

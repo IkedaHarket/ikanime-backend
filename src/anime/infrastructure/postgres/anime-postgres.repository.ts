@@ -2,14 +2,13 @@ import { FindOptions, FindResponse } from "../../../core/interfaces";
 import { Prisma } from "../../../core/adapters";
 import { Criteria, FilterPostgres } from "../../../core/models";
 
-import { Anime, AnimeRepository } from "../..";
-import { AnimeFindFilterDto } from "../../domain/dtos/anime/anime-find-filter.dto";
+import * as Domain from "../../domain";
 
 interface Options{
     prismaClient?: Prisma
 }
 
-export class AnimePostgresRepository implements AnimeRepository{
+export class AnimePostgresRepository implements Domain.AnimeRepository{
 
     private readonly prismaClient: Prisma
 
@@ -17,7 +16,7 @@ export class AnimePostgresRepository implements AnimeRepository{
         this.prismaClient = prismaClient || Prisma.getInstance()
     }
 
-    async find( { filter, paginationDto }: FindOptions<AnimeFindFilterDto> ): Promise<FindResponse<Anime[]>> {
+    async find( { filter, paginationDto }: FindOptions<Domain.AnimeFindFilterDto> ): Promise<FindResponse<Domain.Anime[]>> {
         try {
             const filters : Criteria<Object>[] = []
 
@@ -47,8 +46,8 @@ export class AnimePostgresRepository implements AnimeRepository{
                 })
             ])
 
-            const records : Anime[] = postgresObjects.map( (po) => (
-                    new Anime({
+            const records : Domain.Anime[] = postgresObjects.map( (po) => (
+                    new Domain.Anime({
                         id: po.id,
                         createdAt: po.createdAt,
                         description: po.description,

@@ -1,25 +1,25 @@
 import { Response, Request } from 'express';
-import { AnimeRepository, FindAnime } from '..';
+
 import { CustomError } from '../../core/models';
 import { PaginationDto } from '../../core/dtos';
-import { AnimeFindFilterDto } from '../domain/dtos/anime/anime-find-filter.dto';
+
+import * as Domain from '../domain';
 
 export class AnimeController {
 
   constructor(
-    private readonly animeRepository: AnimeRepository
+    private readonly animeRepository: Domain.AnimeRepository
   ) { }
 
   getAnimes = ( req: Request, res: Response ) => {
-
     const { page = 1, limit = 10 } = req.query;
     const [ errorPagination, paginationDto ] = PaginationDto.create( +page, +limit );
-    const [ errorFilter, animeFindFilterDto ] = AnimeFindFilterDto.create(req.body)
+    const [ errorFilter, animeFindFilterDto ] = Domain.AnimeFindFilterDto.create(req.body);
 
     if ( errorPagination ) return res.status(400).json({ error: errorPagination });
     if ( errorFilter ) return res.status(400).json({ error: errorFilter });
     
-    new FindAnime(this.animeRepository).execute({ 
+    new Domain.FindAnime(this.animeRepository).execute({ 
       paginationDto: paginationDto!,
       filter: animeFindFilterDto!,
     })

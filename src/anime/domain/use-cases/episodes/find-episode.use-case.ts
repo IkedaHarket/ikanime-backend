@@ -1,17 +1,18 @@
 import { FindOptions, PaginationResponse } from "../../../../core/interfaces";
-import { EpisodeRepository, Episode, EpisodeFindFilterDto } from "../../../";
+
+import * as Domain from "../../";
 
 export interface FindEpisodeUseCase{
-    execute(findOptions: FindOptions<EpisodeFindFilterDto>): Promise<PaginationResponse<Episode[]>>
+    execute(findOptions: FindOptions<Domain.EpisodeFindFilterDto>): Promise<PaginationResponse<Domain.Episode[]>>
 }
 
 export class FindEpisode implements FindEpisodeUseCase{
     
     constructor(
-            private readonly episodeRepository: EpisodeRepository
+            private readonly episodeRepository: Domain.EpisodeRepository
         ){}
 
-    async execute(findOptions: FindOptions<EpisodeFindFilterDto>): Promise<PaginationResponse<Episode[]>> {
+    async execute(findOptions: FindOptions<Domain.EpisodeFindFilterDto>): Promise<PaginationResponse<Domain.Episode[]>> {
         
         const { records, totalRecords } = await this.episodeRepository.find(findOptions)
         const { limit, page } = findOptions.paginationDto

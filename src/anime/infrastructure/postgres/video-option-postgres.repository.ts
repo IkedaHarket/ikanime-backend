@@ -3,13 +3,13 @@ import { FindOptions, FindResponse } from "../../../core/interfaces";
 import { Criteria, FilterPostgres } from "../../../core/models";
 
 import * as Domain from "../../domain";
-import { EqualAnimeId } from "./filters";
+import { EqualAnimeEpisodeId } from "./filters";
 
 interface Options{
     prismaClient?: Prisma
 }
 
-export class EpisodePostgresRepository implements Domain.EpisodeRepository{
+export class VideoOptionPostgresRepository implements Domain.VideoOptionRepository{
 
     private readonly prismaClient: Prisma
 
@@ -17,16 +17,16 @@ export class EpisodePostgresRepository implements Domain.EpisodeRepository{
         this.prismaClient = prismaClient || Prisma.getInstance()
     }
 
-    async find({ filter, paginationDto }: FindOptions<Domain.EpisodeFindFilterDto>): Promise<FindResponse<Domain.Episode[]>> {
+    async find({ filter, paginationDto }: FindOptions<Domain.VideoOptionFindFilterDto>): Promise<FindResponse<Domain.VideoOption[]>> {
         try {
             const filters : Criteria<Object>[] = []
 
-            if(filter?.animeId){
-                filters.push(new EqualAnimeId(filter.animeId))
+            if(filter?.animeEpisodeId){
+                filters.push(new EqualAnimeEpisodeId(filter.animeEpisodeId))
             }
             
             const [postgresObjects, totalRecords] = await Promise.all([
-                this.prismaClient.prismaClient.animeEpisode.findMany({
+                this.prismaClient.prismaClient.animeEpisodeVideoOption.findMany({
                     where: { ...new FilterPostgres({
                                     criteria: filters,
                                     logic: filter!.logic
@@ -34,7 +34,7 @@ export class EpisodePostgresRepository implements Domain.EpisodeRepository{
                     skip: (paginationDto.page - 1) * paginationDto.limit,
                     take: paginationDto.limit,
                 }),
-                this.prismaClient.prismaClient.animeEpisode.count({
+                this.prismaClient.prismaClient.animeEpisodeVideoOption.count({
                     where: { ...new FilterPostgres({
                                     criteria: filters,
                                     logic: filter!.logic
@@ -42,13 +42,14 @@ export class EpisodePostgresRepository implements Domain.EpisodeRepository{
                 })
             ])
 
-            const records: Domain.Episode[] = postgresObjects.map( ep => new Domain.Episode({
+            const records: Domain.VideoOption[] = postgresObjects.map( ep => new Domain.VideoOption({
                 id: ep.id,
-                animeId: ep.animeId,
                 createdAt: ep.createdAt,
+                episodeId: ep.animeEpisodeId,
                 isActive: ep.isActive,
-                number: ep.number,
+                nameServer: ep.nameServer,
                 updatedAt: ep.updatedAt,
+                url: ep.url
             }))
             return {
                 totalRecords,
