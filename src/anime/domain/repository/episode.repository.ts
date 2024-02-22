@@ -1,7 +1,7 @@
 import { FindOptions, FindResponse } from '../../../core/interfaces';
 
-import { Episode } from '../../'
+import { Episode, EpisodeFindFilterDto } from '../../'
 
 export abstract class EpisodeRepository{
-    abstract find(findOptions: FindOptions): Promise<FindResponse<Episode[]>>
+    abstract find(findOptions: FindOptions<EpisodeFindFilterDto>): Promise<FindResponse<Episode[]>>
 }

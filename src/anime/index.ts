@@ -2,7 +2,7 @@ export * from './domain/entities/anime.entity'
 export * from './domain/entities/episode.entity'
 export * from './domain/entities/video-option.entity'
 
-export * from './domain/dtos/episode-find-filter.dto'
+export * from './domain/dtos/episode/episode-find-filter.dto'
 
 export * from './domain/repository/anime.repository'
 export * from './domain/repository/episode.repository'

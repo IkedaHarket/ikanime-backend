@@ -1,8 +1,8 @@
 import { FindOptions, PaginationResponse } from "../../../../core/interfaces";
-import { EpisodeRepository, Episode } from "../../../";
+import { EpisodeRepository, Episode, EpisodeFindFilterDto } from "../../../";
 
 export interface FindEpisodeUseCase{
-    execute(findOptions: FindOptions): Promise<PaginationResponse<Episode[]>>
+    execute(findOptions: FindOptions<EpisodeFindFilterDto>): Promise<PaginationResponse<Episode[]>>
 }
 
 export class FindEpisode implements FindEpisodeUseCase{
@@ -11,7 +11,7 @@ export class FindEpisode implements FindEpisodeUseCase{
             private readonly episodeRepository: EpisodeRepository
         ){}
 
-    async execute(findOptions: FindOptions): Promise<PaginationResponse<Episode[]>> {
+    async execute(findOptions: FindOptions<EpisodeFindFilterDto>): Promise<PaginationResponse<Episode[]>> {
         
         const { records, totalRecords } = await this.episodeRepository.find(findOptions)
         const { limit, page } = findOptions.paginationDto

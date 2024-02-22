@@ -1,9 +1,7 @@
 import { PaginationDto } from "../../dtos"
-import { Criteria } from "../../models"
 
-
-export interface FindOptions{
-    filter?: Criteria<Object>
+export interface FindOptions<T>{
+    filter: T
     paginationDto: PaginationDto
 }
 

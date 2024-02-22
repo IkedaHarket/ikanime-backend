@@ -1,8 +1,9 @@
 import { FindOptions, FindResponse } from "../../../core/interfaces";
 import { Prisma } from "../../../core/adapters";
-import { Criteria } from "../../../core/models";
+import { Criteria, FilterPostgres } from "../../../core/models";
 
 import { Anime, AnimeRepository } from "../..";
+import { AnimeFindFilterDto } from "../../domain/dtos/anime/anime-find-filter.dto";
 
 interface Options{
     prismaClient?: Prisma
@@ -16,11 +17,16 @@ export class AnimePostgresRepository implements AnimeRepository{
         this.prismaClient = prismaClient || Prisma.getInstance()
     }
 
-    async find( { filter, paginationDto }: FindOptions ): Promise<FindResponse<Anime[]>> {
+    async find( { filter, paginationDto }: FindOptions<AnimeFindFilterDto> ): Promise<FindResponse<Anime[]>> {
         try {
+            const filters : Criteria<Object>[] = []
+
             const [postgresObjects, totalRecords] = await Promise.all([
                 this.prismaClient.prismaClient.anime.findMany({
-                    where: { ...(filter as Criteria<{ [key: string]: any[] }>)?.applyFilter() },
+                    where: { ...new FilterPostgres({
+                                criteria: filters,
+                                logic: filter!.logic
+                            })?.applyFilter() },
                     skip: (paginationDto.page - 1) * paginationDto.limit,
                     take: paginationDto.limit,
                     include: { 
@@ -34,7 +40,10 @@ export class AnimePostgresRepository implements AnimeRepository{
                 }
                 }),
                 this.prismaClient.prismaClient.anime.count({
-                    where: { ...(filter as Criteria<{ [key: string]: any[] }>)?.applyFilter() },
+                    where: { ...new FilterPostgres({
+                                criteria: filters,
+                                logic: filter!.logic
+                            })?.applyFilter() },
                 })
             ])
 

@@ -1,8 +1,10 @@
 import { Prisma } from "../../../core/adapters";
 import { FindOptions, FindResponse } from "../../../core/interfaces";
-import { Criteria } from "../../../core/models";
+import { Criteria, FilterPostgres } from "../../../core/models";
+import { EpisodeFindFilterDto } from "../../domain/dtos/episode/episode-find-filter.dto";
 import { Episode } from "../../domain/entities/episode.entity";
 import { EpisodeRepository } from "../../domain/repository/episode.repository";
+import { EqualAnimeId } from "./filters/equal-animeId-episode.filter";
 
 interface Options{
     prismaClient?: Prisma
@@ -16,16 +18,28 @@ export class EpisodePostgresRepository implements EpisodeRepository{
         this.prismaClient = prismaClient || Prisma.getInstance()
     }
 
-    async find({ filter, paginationDto }: FindOptions): Promise<FindResponse<Episode[]>> {
+    async find({ filter, paginationDto }: FindOptions<EpisodeFindFilterDto>): Promise<FindResponse<Episode[]>> {
         try {
+            const filters : Criteria<Object>[] = []
+
+            if(filter?.animeId){
+                filters.push(new EqualAnimeId(filter.animeId))
+            }
+            
             const [postgresObjects, totalRecords] = await Promise.all([
                 this.prismaClient.prismaClient.animeEpisode.findMany({
-                    where: { ...(filter as Criteria<{ [key: string]: any[] }>)?.applyFilter() },
+                    where: { ...new FilterPostgres({
+                                    criteria: filters,
+                                    logic: filter!.logic
+                                })?.applyFilter() },
                     skip: (paginationDto.page - 1) * paginationDto.limit,
                     take: paginationDto.limit,
                 }),
                 this.prismaClient.prismaClient.animeEpisode.count({
-                    where: { ...(filter as Criteria<{ [key: string]: any[] }>)?.applyFilter() },
+                    where: { ...new FilterPostgres({
+                                    criteria: filters,
+                                    logic: filter!.logic
+                                })?.applyFilter() },
                 })
             ])
 
