@@ -1,7 +1,7 @@
 import { FindOptions, FindResponse } from "../../../core/interfaces";
 import { Prisma } from "../../../core/adapters";
 import { Criteria, FilterPostgres } from "../../../core/models";
-
+import * as Filter from './filters' 
 import * as Domain from "../../domain";
 
 interface Options{
@@ -19,9 +19,17 @@ export class AnimePostgresRepository implements Domain.AnimeRepository{
     async find( { filter, paginationDto }: FindOptions<Domain.AnimeFindFilterDto> ): Promise<FindResponse<Domain.Anime[]>> {
         try {
             const filters : Criteria<Object>[] = []
+            const orderBy: Criteria<Object>[] = []
 
+            if(filter.orderBy){
+                if(filter.orderBy.createdAt){
+                    orderBy.push( new Filter.OrderByCreatedAt(filter.orderBy.createdAt) )
+                }
+            }
+            
             const [postgresObjects, totalRecords] = await Promise.all([
                 this.prismaClient.prismaClient.anime.findMany({
+                    orderBy: orderBy.map(orderBy => orderBy.applyFilter()) ,
                     where: { ...new FilterPostgres({
                                 criteria: filters,
                                 logic: filter!.logic

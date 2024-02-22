@@ -18,7 +18,6 @@ export class AnimeController {
 
     if ( errorPagination ) return res.status(400).json({ error: errorPagination });
     if ( errorFilter ) return res.status(400).json({ error: errorFilter });
-    
     new Domain.FindAnime(this.animeRepository).execute({ 
       paginationDto: paginationDto!,
       filter: animeFindFilterDto!,
