@@ -13,8 +13,8 @@ export class CreateLogDto {
         this.origin = origin;
     }
 
-    static create(props:{[key:string]:any}): [ string?, CreateLogDto? ] {
-        const { level, message, origin } = props
+    static create( object: { [key:string]: any } ): [ string?, CreateLogDto? ] {
+        const { level, message, origin } = object
         if(this.isNotValidSeveritylevel(level)) return [`level is not valid`] 
         if(!message) return [`message is required`] 
         if(!origin) return [`origin is required`] 
