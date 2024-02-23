@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express from 'express'
 import compression from 'compression';
 import path from 'path';
 
@@ -55,6 +55,5 @@ export class Server{
             console.log(`Server running on port ${ this.port }`);
           });
     }
-
 
 }
