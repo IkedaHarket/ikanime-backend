@@ -20,10 +20,14 @@ export class AnimePostgresRepository implements Domain.AnimeRepository{
         try {
             const filters : Criteria<Object>[] = []
             const orderBy: Criteria<Object>[] = []
-
             if(filter.orderBy){
                 if(filter.orderBy.createdAt){
                     orderBy.push( new Filter.OrderByCreatedAt(filter.orderBy.createdAt) )
+                }
+            }
+            if(filter.name){
+                if(filter.name.contains){
+                    filters.push( new Filter.ContainName(filter.name.contains) )
                 }
             }
             
