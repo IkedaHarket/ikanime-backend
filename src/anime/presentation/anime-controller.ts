@@ -19,10 +19,9 @@ export class AnimeController extends Controller {
       const { page = 1, limit = 10 } = req.query;
       const  paginationDto  = PaginationDto.create( +page, +limit );
       const  animeFindFilterDto  = Domain.AnimeFindFilterDto.create(req.body);
-
       new Domain.FindAnime(this.animeRepository).execute({ 
-        paginationDto: paginationDto!,
-        filter: animeFindFilterDto!,
+        paginationDto,
+        filter: animeFindFilterDto,
       })
       .then( response => {
         const serverResponse: ServerResponse<PaginationResponse<Domain.Anime[]>> = {

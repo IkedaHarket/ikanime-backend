@@ -9,8 +9,8 @@ export class VideoOptionFindFilterDto {
   
     static create( object: { [key: string]: any } ):  VideoOptionFindFilterDto {
         const { animeEpisodeId = null, logic = 'AND' } = object
-        if(!(typeof animeEpisodeId === 'string' || animeEpisodeId === null)) CustomError.badRequest('animeId must be string or null')
-        if( !['AND', 'OR'].includes(logic) ) CustomError.badRequest('logic must be AND or OR')
+        if(!(typeof animeEpisodeId === 'string' || animeEpisodeId === null)) throw CustomError.badRequest('animeId must be string or null')
+        if( !['AND', 'OR'].includes(logic) ) throw CustomError.badRequest('logic must be AND or OR')
 
         return  new VideoOptionFindFilterDto(animeEpisodeId,logic) ;
     }
