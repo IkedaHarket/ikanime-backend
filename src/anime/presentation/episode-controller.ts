@@ -1,40 +1,42 @@
 import { Request, Response } from "express";
 
-import { CustomError } from "../../core/models";
 import { PaginationDto } from "../../core/dtos";
 
 import * as Domain from "../domain";
+import { Controller } from "./controller";
+import { PaginationResponse, ServerResponse } from "../../core/interfaces";
 
-export class EpisodeController{
+export class EpisodeController extends Controller{
 
     constructor(
             private readonly episodeRepository: Domain.EpisodeRepository,
-        ){}
-
-    getEpisodes = (req: Request, res: Response) => {
-        const { page = 1, limit = 12 } = req.query;
-        const [ errorPagination, paginationDto ] = PaginationDto.create( +page, +limit );
-        const [ errorFilter, episodeFindFilterDto ] = Domain.EpisodeFindFilterDto.create(req.body)
-        
-        if ( errorPagination ) return res.status(400).json({ error: errorPagination });
-        if ( errorFilter ) return res.status(400).json({ error: errorFilter });
-
-        new Domain.FindEpisode(this.episodeRepository).execute({ 
-          paginationDto: paginationDto!,
-          filter: episodeFindFilterDto!,
-        })
-        .then( response => res.json( response )) 
-        .catch( error => this.handleError( error, res ) );
+        ){
+      super();
     }
 
-    private handleError = ( error: unknown, res: Response ) => {
-        if ( error instanceof CustomError ) {
-          return res.status( error.statusCode ).json( { error: error.message } );
+    getEpisodes = (req: Request, res: Response) => {
+        try {
+          const { page = 1, limit = 12 } = req.query;
+          const paginationDto  = PaginationDto.create( +page, +limit );
+          const  episodeFindFilterDto = Domain.EpisodeFindFilterDto.create(req.body)
+
+          new Domain.FindEpisode(this.episodeRepository).execute({ 
+            paginationDto,
+            filter: episodeFindFilterDto,
+          })
+          .then( response => {
+            const serverResponse: ServerResponse<PaginationResponse<Domain.Episode[]>> = {
+              status: true,
+              response
+            }
+            res.json( serverResponse )
+          }) 
+          .catch( error => this.handleError( error, res ) );
+        } catch (error) {
+          this.handleError(error, res)
         }
-    
-        console.log( `${ error }` );
-        return res.status( 500 ).json( { error: 'Internal server error' } );
-      };
+    }
+
 
 }
 

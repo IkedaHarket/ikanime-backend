@@ -1,39 +1,43 @@
 import { Response, Request } from 'express';
 
-import { CustomError } from '../../core/models';
 import { PaginationDto } from '../../core/dtos';
 
 import * as Domain from '../domain';
+import { PaginationResponse, ServerResponse } from '../../core/interfaces';
+import { Controller } from './controller';
 
-export class AnimeController {
+export class AnimeController extends Controller {
 
   constructor(
     private readonly animeRepository: Domain.AnimeRepository
-  ) { }
+  ) {
+    super();
+  }
 
   getAnimes = ( req: Request, res: Response ) => {
-    const { page = 1, limit = 10 } = req.query;
-    const [ errorPagination, paginationDto ] = PaginationDto.create( +page, +limit );
-    const [ errorFilter, animeFindFilterDto ] = Domain.AnimeFindFilterDto.create(req.body);
+    try {
+      const { page = 1, limit = 10 } = req.query;
+      const  paginationDto  = PaginationDto.create( +page, +limit );
+      const  animeFindFilterDto  = Domain.AnimeFindFilterDto.create(req.body);
 
-    if ( errorPagination ) return res.status(400).json({ error: errorPagination });
-    if ( errorFilter ) return res.status(400).json({ error: errorFilter });
-    new Domain.FindAnime(this.animeRepository).execute({ 
-      paginationDto: paginationDto!,
-      filter: animeFindFilterDto!,
-    })
-    .then( response => res.json( response )) 
-    .catch( error => this.handleError( error, res ) );
+      new Domain.FindAnime(this.animeRepository).execute({ 
+        paginationDto: paginationDto!,
+        filter: animeFindFilterDto!,
+      })
+      .then( response => {
+        const serverResponse: ServerResponse<PaginationResponse<Domain.Anime[]>> = {
+          status: true,
+          response
+        }
+        res.json( serverResponse )
+      }) 
+      .catch( error => this.handleError( error, res ) );
+    } catch (error) {
+      this.handleError(error, res)
+    }
       
   };
 
-  private handleError = ( error: unknown, res: Response ) => {
-    if ( error instanceof CustomError ) {
-      return res.status( error.statusCode ).json( { error: error.message } );
-    }
-
-    console.log( `${ error }` );
-    return res.status( 500 ).json( { error: 'Internal server error' } );
-  };
+  
   
 }

@@ -1,3 +1,5 @@
+import { CustomError } from "../../../../core/models"
+
 export class VideoOptionFindFilterDto {
 
     private constructor(
@@ -5,11 +7,12 @@ export class VideoOptionFindFilterDto {
       public readonly logic: 'AND' | 'OR',
     ) {}
   
-    static create( object: { [key: string]: any } ): [string?, VideoOptionFindFilterDto?] {
+    static create( object: { [key: string]: any } ):  VideoOptionFindFilterDto {
         const { animeEpisodeId = null, logic = 'AND' } = object
-        if(!(typeof animeEpisodeId === 'string' || animeEpisodeId === null)) return ['animeId must be string or null']
-        if( !['AND', 'OR'].includes(logic) ) return ['logic must be AND or OR']
-        return [ undefined, new VideoOptionFindFilterDto(animeEpisodeId,logic) ];
+        if(!(typeof animeEpisodeId === 'string' || animeEpisodeId === null)) CustomError.badRequest('animeId must be string or null')
+        if( !['AND', 'OR'].includes(logic) ) CustomError.badRequest('logic must be AND or OR')
+
+        return  new VideoOptionFindFilterDto(animeEpisodeId,logic) ;
     }
   
   }

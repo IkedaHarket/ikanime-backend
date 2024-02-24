@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import compression from 'compression';
 import path from 'path';
 
@@ -33,6 +34,7 @@ export class Server{
         this.app.use( express.json() )
         this.app.use( express.urlencoded({ extended: true }) )
         this.app.use( compression() )
+        this.app.use( cors() )
     }
     
     private setRoutes(): void {

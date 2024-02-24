@@ -18,11 +18,11 @@ export class AnimeRouter {
     const videoOptionsRepository = new Infrastructure.VideoOptionPostgresRepository({})
     const videoOptionsController = new Controller.VideoOptionController(videoOptionsRepository)
 
-    router.get('/', animeController.getAnimes );
+    router.post('/find', animeController.getAnimes );
     
-    router.get('/episode', episodeController.getEpisodes );
+    router.post('/episode/find', episodeController.getEpisodes );
     
-    router.get('/video-option', videoOptionsController.getVideoOptions );
+    router.post('/video-option/find', videoOptionsController.getVideoOptions );
 
     return router;
   }

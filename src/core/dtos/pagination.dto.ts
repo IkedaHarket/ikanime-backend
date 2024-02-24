@@ -1,3 +1,5 @@
+import { CustomError } from "../models";
+
 export class PaginationDto {
 
     private constructor(
@@ -5,14 +7,14 @@ export class PaginationDto {
       public readonly limit: number,
     ) {}
   
-    static create( page: number = 1, limit: number = 10 ): [string?, PaginationDto?] {
+    static create( page: number = 1, limit: number = 10 ): PaginationDto {
   
-      if ( isNaN(page) || isNaN(limit) ) return ['Page and Limit must be numbers'];
+      if ( isNaN(page) || isNaN(limit) ) throw CustomError.badRequest('Page and Limit must be numbers');
   
-      if ( page <= 0 ) return ['Page must be greater than 0'];
-      if ( limit <= 0 ) return ['Limit must be greater than 0']
+      if ( page <= 0 ) throw CustomError.badRequest('Page must be greater than 0');
+      if ( limit <= 0 ) throw CustomError.badRequest('Limit must be greater than 0')
   
-      return [ undefined, new PaginationDto(page, limit)];
+      return  new PaginationDto(page, limit);
     }
   
   }

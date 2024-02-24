@@ -1,3 +1,4 @@
+import { CustomError } from "../../../../core/models";
 
 
 export class AnimeFindFilterDto {
@@ -8,13 +9,12 @@ export class AnimeFindFilterDto {
       public readonly name?: { contains?: string },
     ) {}
   
-    static create( object: { [key: string]: any } ): [string?, AnimeFindFilterDto?] {
+    static create( object: { [key: string]: any } ):  AnimeFindFilterDto {
         const { name, orderBy = { createdAt: 'desc' }, logic = 'AND' } = object
-        if( !['AND', 'OR'].includes(logic) ) return ['logic must be AND or OR']
-        if (!['desc', 'asc'].includes(orderBy.createdAt)) return ['createdAt must be asc or desc']
+        if( !['AND', 'OR'].includes(logic) ) CustomError.badRequest('logic must be AND or OR')
+        if(!['desc', 'asc'].includes(orderBy.createdAt)) CustomError.badRequest('createdAt must be asc or desc')
 
-
-        return [ undefined, new AnimeFindFilterDto(logic, orderBy, name) ];
+        return  new AnimeFindFilterDto(logic, orderBy, name) ;
     }
   
   }
