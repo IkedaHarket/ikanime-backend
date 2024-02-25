@@ -6,7 +6,7 @@ export class AnimeFindFilterDto {
     private constructor(
       public readonly logic: 'AND' | 'OR',
       public readonly orderBy: { createdAt: 'desc' | 'asc' },
-      public readonly categories: string[],
+      public readonly categories: { mode: 'every' | 'some' | 'none', in: string[] },
       public readonly types: string[],
       public readonly states: string[],
       public readonly name: { contains?: string },
@@ -15,7 +15,7 @@ export class AnimeFindFilterDto {
     static create( object: { [key: string]: any } ):  AnimeFindFilterDto {
         const { 
           name = "", 
-          categories = [],
+          categories = { mode:'every', in:[] },
           types = [],
           states = [],
           orderBy = { createdAt: 'desc' }, 
@@ -23,9 +23,16 @@ export class AnimeFindFilterDto {
         } = object
         if( !['AND', 'OR'].includes(logic) ) throw CustomError.badRequest('logic must be AND or OR')
         if(!['desc', 'asc'].includes(orderBy.createdAt)) throw CustomError.badRequest('createdAt must be asc or desc')
-        if(!Array.isArray(categories)) throw CustomError.badRequest('categories  must be array') 
         if(!Array.isArray(types) ) throw CustomError.badRequest('types must be array') 
         if(!Array.isArray(states) ) throw CustomError.badRequest('states must be array')
+        if (typeof categories !== 'object' || categories === null) throw CustomError.badRequest('categories must be an object')
+        const validModes = ['every', 'some', 'none'];
+        if (!categories.mode || !validModes.includes(categories.mode)) {
+          throw CustomError.badRequest(`categories.mode must be one of: ${validModes.join(', ')}`);
+        }
+        if (!Array.isArray(categories.in)) {
+          throw CustomError.badRequest('categories.in must be an array');
+        }
 
         return new AnimeFindFilterDto(logic, orderBy, categories, types, states, name) ;
     }
