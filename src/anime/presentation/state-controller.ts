@@ -6,25 +6,25 @@ import * as Domain from '../domain';
 import { PaginationResponse, ServerResponse } from '../../core/interfaces';
 import { Controller } from './controller';
 
-export class CategoryController extends Controller {
+export class StateController extends Controller {
 
   constructor(
-    private readonly categoryRepository: Domain.CategoryRepository
+    private readonly stateRepository: Domain.StateRepository
   ) {
     super();
   }
 
-  getCategories = ( req: Request, res: Response ) => {
+  getStates = ( req: Request, res: Response ) => {
     try {
       const { page = 1, limit = 10 } = req.query;
       const  paginationDto  = PaginationDto.create( +page, +limit );
 
-      new Domain.FindCategory(this.categoryRepository).execute({
+      new Domain.FindState(this.stateRepository).execute({
             paginationDto,
             filter: undefined
         })
       .then( response => {
-        const serverResponse: ServerResponse<PaginationResponse<Domain.Category[]>> = {
+        const serverResponse: ServerResponse<PaginationResponse<Domain.State[]>> = {
           status: true,
           response
         }
