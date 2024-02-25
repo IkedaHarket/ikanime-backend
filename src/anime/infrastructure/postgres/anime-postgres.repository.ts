@@ -71,7 +71,14 @@ export class AnimePostgresRepository implements Domain.AnimeRepository{
         if(filter.types.length > 0){
             this.filters.push( new Filter.InTypeId(filter.types) )
         }
+        if(filter.states.length > 0){
+            this.filters.push( new Filter.InStateId(filter.states) )
+        }
+        if(filter.categories.length > 0){
+            this.filters.push( new Filter.InAnimeCategoryId(filter.categories) )
+        }
     }
+    
     private resetFilters(){
         this.filters = []
         this.orderBy = []

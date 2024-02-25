@@ -18,7 +18,7 @@ export class EpisodeController extends Controller{
         try {
           const { page = 1, limit = 12 } = req.query;
           const paginationDto  = PaginationDto.create( +page, +limit );
-          const  episodeFindFilterDto = Domain.EpisodeFindFilterDto.create(req.body)
+          const episodeFindFilterDto = Domain.EpisodeFindFilterDto.create(req.body)
 
           new Domain.FindEpisode(this.episodeRepository).execute({ 
             paginationDto,

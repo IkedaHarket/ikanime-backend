@@ -9,7 +9,6 @@ export class AnimeFindFilterDto {
       public readonly categories: string[],
       public readonly types: string[],
       public readonly states: string[],
-      public readonly years: string[],
       public readonly name: { contains?: string },
     ) {}
   
@@ -19,7 +18,6 @@ export class AnimeFindFilterDto {
           categories = [],
           types = [],
           states = [],
-          years = [],
           orderBy = { createdAt: 'desc' }, 
           logic = 'AND' 
         } = object
@@ -27,10 +25,9 @@ export class AnimeFindFilterDto {
         if(!['desc', 'asc'].includes(orderBy.createdAt)) throw CustomError.badRequest('createdAt must be asc or desc')
         if(!Array.isArray(categories)) throw CustomError.badRequest('categories  must be array') 
         if(!Array.isArray(types) ) throw CustomError.badRequest('types must be array') 
-        if(!Array.isArray(states) ) throw CustomError.badRequest('states must be array') 
-        if(!Array.isArray(years)) throw CustomError.badRequest('years must be array') 
+        if(!Array.isArray(states) ) throw CustomError.badRequest('states must be array')
 
-        return  new AnimeFindFilterDto(logic, orderBy, categories, types, states, years , name) ;
+        return new AnimeFindFilterDto(logic, orderBy, categories, types, states, name) ;
     }
   
   }
