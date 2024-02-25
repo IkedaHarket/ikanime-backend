@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import * as Controller from './';
 import * as Infrastructure from '../infrastructure';
+import { TypePostgresRepository } from '../infrastructure/postgres/type-postgres.repository';
 
 export class AnimeRouter {
 
@@ -21,6 +22,9 @@ export class AnimeRouter {
     const categoriesRepository = new Infrastructure.CategoryPostgresRepository({})
     const categoryController = new Controller.CategoryController(categoriesRepository)
 
+    const typeRepository = new Infrastructure.TypePostgresRepository({})
+    const typeController = new Controller.TypeController(typeRepository)
+
     router.post('/find', animeController.getAnimes );
     
     router.post('/episode/find', episodeController.getEpisodes );
@@ -28,6 +32,8 @@ export class AnimeRouter {
     router.post('/video-option/find', videoOptionsController.getVideoOptions );
 
     router.post('/categories/find', categoryController.getCategories )
+
+    router.post('/type/find', typeController.getTypes )
 
     return router;
   }

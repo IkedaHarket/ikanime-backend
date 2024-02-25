@@ -9,7 +9,7 @@ import { Controller } from './controller';
 export class CategoryController extends Controller {
 
   constructor(
-    private readonly categoryRepository: Domain.CategoryRepository
+    private readonly categoryRepository: Domain.TypeRepository
   ) {
     super();
   }
