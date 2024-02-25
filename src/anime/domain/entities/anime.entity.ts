@@ -1,7 +1,10 @@
+import { Category } from "../"
+
 interface State{ id: string, value:string }
 interface Type{ id: string, value:string }
 interface OtherNames{ id: string, value:string }
-interface Category{ id: string, value:string }
+
+
 interface AnimeProps{
     id:string
     name: string,

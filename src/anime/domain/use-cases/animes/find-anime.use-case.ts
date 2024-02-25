@@ -19,8 +19,8 @@ export class FindAnime implements FindAnimeUseCase{
         return {
             limit,
             page,
-            next: (page < totalPages ) ? `/api/anime?page=${ ( page + 1 ) }&limit=${ limit }` : null ,
-            prev: (page - 1 > 0) ? `/api/anime?page=${ ( page - 1 ) }&limit=${ limit }` : null ,
+            next: (page < totalPages ) ? `/api/anime/find?page=${ ( page + 1 ) }&limit=${ limit }` : null ,
+            prev: (page - 1 > 0) ? `/api/anime/find?page=${ ( page - 1 ) }&limit=${ limit }` : null ,
             records,
             total: totalRecords
         }

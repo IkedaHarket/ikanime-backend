@@ -19,8 +19,8 @@ export class FindVideoOption implements FindVideoOptionUseCase{
         return {
             limit,
             page,
-            next: (page < totalPages ) ? `/api/anime/episode?page=${ ( page + 1 ) }&limit=${ limit }` : null ,
-            prev: (page - 1 > 0) ? `/api/anime/episode?page=${ ( page - 1 ) }&limit=${ limit }` : null ,
+            next: (page < totalPages ) ? `/api/anime/episode/find?page=${ ( page + 1 ) }&limit=${ limit }` : null ,
+            prev: (page - 1 > 0) ? `/api/anime/episode/find?page=${ ( page - 1 ) }&limit=${ limit }` : null ,
             records,
             total: totalRecords
         }
