@@ -4,7 +4,6 @@ import * as Infrastructure from '../infrastructure';
 
 export class AnimeRouter {
 
-
   static get routes(): Router {
 
     const router = Router();
@@ -33,7 +32,7 @@ export class AnimeRouter {
     
     router.post('/video-option/find', videoOptionsController.getVideoOptions );
 
-    router.post('/categories/find', categoryController.getCategories )
+    router.post('/category/find', categoryController.getCategories )
 
     router.post('/type/find', typeController.getTypes )
 
