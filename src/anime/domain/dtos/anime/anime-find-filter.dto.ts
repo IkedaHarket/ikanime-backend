@@ -4,12 +4,12 @@ import { CustomError } from "../../../../core/models";
 export class AnimeFindFilterDto {
 
     private constructor(
-      public readonly logic: 'AND' | 'OR',
-      public readonly orderBy: { createdAt: 'desc' | 'asc' },
       public readonly categories: { mode: 'every' | 'some' | 'none', in: string[] },
-      public readonly types: string[],
-      public readonly states: string[],
+      public readonly logic: 'AND' | 'OR',
       public readonly name: { contains?: string },
+      public readonly orderBy: { createdAt: 'desc' | 'asc' },
+      public readonly states: string[],
+      public readonly types: string[],
     ) {}
   
     static create( object: { [key: string]: any } ):  AnimeFindFilterDto {
@@ -34,7 +34,7 @@ export class AnimeFindFilterDto {
           throw CustomError.badRequest('categories.in must be an array');
         }
 
-        return new AnimeFindFilterDto(logic, orderBy, categories, types, states, name) ;
+        return new AnimeFindFilterDto(categories, logic, name, orderBy, states, types) ;
     }
   
   }
