@@ -15,7 +15,7 @@ export class AnimeFindFilterDto {
     static create( object: { [key: string]: any } ):  AnimeFindFilterDto {
         const { 
           name = "", 
-          categories = { mode:'every', in:[] },
+          categories = { mode:'some', in:[] },
           types = [],
           states = [],
           orderBy = { createdAt: 'desc' }, 
