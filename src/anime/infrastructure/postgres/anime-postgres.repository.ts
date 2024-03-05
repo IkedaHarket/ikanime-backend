@@ -3,6 +3,7 @@ import { Prisma } from "../../../core/adapters";
 import { Criteria, FilterPostgres } from "../../../core/models";
 import * as Filter from './filters' 
 import * as Domain from "../../domain";
+import { ContainUniqueName } from './filters/include-uniqueName.filter';
 
 interface Options{
     prismaClient?: Prisma
@@ -68,6 +69,11 @@ export class AnimePostgresRepository implements Domain.AnimeRepository{
                 this.filters.push( new Filter.ContainName(filter.name.contains) )
             }
         }
+        if(filter.uniqueName){
+            if(filter.uniqueName.contains){
+                this.filters.push( new Filter.ContainUniqueName(filter.uniqueName.contains) )
+            }
+        }
         if(filter.types.length > 0){
             this.filters.push( new Filter.InTypeId(filter.types) )
         }
@@ -87,6 +93,7 @@ export class AnimePostgresRepository implements Domain.AnimeRepository{
         this.filters = []
         this.orderBy = []
     }
+    
     private convertToAnime(po: any){
         return new Domain.Anime({
             id: po.id,

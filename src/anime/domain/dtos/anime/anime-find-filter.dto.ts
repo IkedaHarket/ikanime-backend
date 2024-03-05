@@ -10,17 +10,20 @@ export class AnimeFindFilterDto {
       public readonly orderBy: { createdAt: 'desc' | 'asc' },
       public readonly states: string[],
       public readonly types: string[],
+      public readonly uniqueName: { contains?: string },
     ) {}
   
     static create( object: { [key: string]: any } ):  AnimeFindFilterDto {
         const { 
-          name = "", 
+          name = { contains: '' }, 
           categories = { mode:'some', in:[] },
           types = [],
           states = [],
           orderBy = { createdAt: 'desc' }, 
-          logic = 'AND' 
+          logic = 'AND',
+          uniqueName = { contains: '' }, 
         } = object
+        
         if( !['AND', 'OR'].includes(logic) ) throw CustomError.badRequest('logic must be AND or OR')
         if(!['desc', 'asc'].includes(orderBy.createdAt)) throw CustomError.badRequest('createdAt must be asc or desc')
         if(!Array.isArray(types) ) throw CustomError.badRequest('types must be array') 
@@ -34,7 +37,7 @@ export class AnimeFindFilterDto {
           throw CustomError.badRequest('categories.in must be an array');
         }
 
-        return new AnimeFindFilterDto(categories, logic, name, orderBy, states, types) ;
+        return new AnimeFindFilterDto(categories, logic, name, orderBy, states, types, uniqueName) ;
     }
   
   }
